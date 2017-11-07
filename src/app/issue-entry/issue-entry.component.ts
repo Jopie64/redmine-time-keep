@@ -1,7 +1,7 @@
 import { RedmineService } from './../redmine.service';
 import { Observable, Subject } from 'rxjs/Rx';
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { IssueHead } from './../home/home.component';
+import { IssueHead } from '../issue-head';
 
 @Component({
   selector: 'app-issue-entry',

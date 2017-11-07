@@ -5,12 +5,7 @@ import { Component, OnInit } from '@angular/core';
 import { RedmineApi, RedmineService, SearchResult, addFilter, makeQuery, Query } from './../redmine.service';
 import { ReplaySubject, Observable, Subject, BehaviorSubject, Subscription } from 'rxjs/Rx';
 import { HttpErrorResponse } from '@angular/common/http';
-
-export interface IssueHead {
-  id: number;
-  tracker: string;
-  title: string;
-}
+import { IssueHead } from '../issue-head';
 
 @Component({
   selector: 'app-home',
