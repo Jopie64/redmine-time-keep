@@ -17,8 +17,8 @@ export class CommitComponent {
   private redmine: RedmineApi;
   public issue: Issue;
   public get title() { return this.issue ? `${this.issue.tracker.name} #${this.issue.id}` : ''; }
-  public get subject() { return this.issue ? this.issue.subject : ''; }
-  public get description() { return this.issue ? this.issue.description : ''; }
+  public get subject() { return this.issue && this.issue.subject ? this.issue.subject : ''; }
+  public get description() { return this.issue && this.issue.description ? this.issue.description : ''; }
 
   public workPerc$ = new Subject<number>();
   public commitDuration$ = this.worktime.runningTime$.withLatestFrom(this.workPerc$.startWith(1))
@@ -26,7 +26,7 @@ export class CommitComponent {
   public activities: IdAndName[];
 
   public finalDuration = 0;
-  
+
   commit = this.fb.group({
     comment: [''],
     activity: ['']
