@@ -1,4 +1,4 @@
-import { Subject, Observable, Subscription } from 'rxjs/Rx';
+import { Subject, Observable, Subscription } from 'rxjs';
 import { Injectable, OnDestroy } from '@angular/core';
 
 

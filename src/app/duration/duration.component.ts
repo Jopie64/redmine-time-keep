@@ -1,5 +1,5 @@
 import { FormBuilder } from '@angular/forms';
-import { Observable, Subscription } from 'rxjs/Rx';
+import { Observable, Subscription } from 'rxjs';
 import { Component, OnInit, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
 
 const toDuration = tm =>

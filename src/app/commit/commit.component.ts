@@ -1,11 +1,10 @@
 import { logObs } from './../log.service';
 import { RedmineService, RedmineApi, makeQuery, IdAndName, Issue, TimeEntry } from './../redmine.service';
 import { WorktimeService } from './../worktime.service';
-import { Observable } from 'rxjs/Rx';
+import { Observable ,  Subject } from 'rxjs';
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, Validators } from '@angular/forms';
-import { Subject } from 'rxjs/Subject';
 
 @Component({
   selector: 'app-commit',

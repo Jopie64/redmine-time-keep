@@ -1,5 +1,5 @@
 import { RedmineService } from './../redmine.service';
-import { Observable, Subject } from 'rxjs/Rx';
+import { Observable, Subject } from 'rxjs';
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { IssueHead } from '../issue-head';
 

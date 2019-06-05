@@ -3,7 +3,7 @@ import { logObs } from './../log.service';
 import { FormControl, FormBuilder } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { RedmineApi, RedmineService, SearchResult, addFilter, makeQuery, Query } from './../redmine.service';
-import { ReplaySubject, Observable, Subject, BehaviorSubject, Subscription } from 'rxjs/Rx';
+import { ReplaySubject, Observable, Subject, BehaviorSubject, Subscription } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { IssueHead } from '../issue-head';
 

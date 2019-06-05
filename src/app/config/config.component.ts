@@ -1,7 +1,7 @@
 import { RedmineService } from './../redmine.service';
 import { Component } from '@angular/core';
 import { FormBuilder, Validators, FormControl, FormGroup } from '@angular/forms';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 

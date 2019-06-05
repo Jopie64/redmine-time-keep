@@ -1,6 +1,6 @@
 import { IssueParams } from './redmine.service';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { logObs } from './log.service';
 
