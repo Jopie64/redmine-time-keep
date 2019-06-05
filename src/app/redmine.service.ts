@@ -3,6 +3,7 @@ import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { logObs } from './log.service';
+import { tap, map } from 'rxjs/operators';
 
 export interface IdAndName {
   id: number;
@@ -120,7 +121,7 @@ const toRedmineQuery = (cmd: string, params?: any) => {
 
 interface QueryRunner {
   get: <T>(query: Query) => Observable<T>;
-  post: (query: Query) => Observable<any>;  
+  post: (query: Query) => Observable<any>;
 }
 
 const makeQueryRunner = (http: HttpClient, cred: RedmineConfig): QueryRunner => {
@@ -132,14 +133,14 @@ const makeQueryRunner = (http: HttpClient, cred: RedmineConfig): QueryRunner => 
     get: <T>(query: Query): Observable<T> => {
       const queryUrl = toRedmineQuery(query.cmd, query.params);
       console.log('Running get query', queryUrl, query);
-      return http.get<T>(cred.url + '/' + queryUrl, { headers })
-        .do(logObs('Query ' + queryUrl));
+      return http.get<T>(cred.url + '/' + queryUrl, { headers }).pipe(
+        tap(logObs('Query ' + queryUrl)));
     },
     post: (query: Query): Observable<any> => {
       const queryUrl = toRedmineQuery(query.cmd);
       console.log('Running post query', queryUrl, query);
-      return http.post(cred.url + '/' + queryUrl, query.params, { headers })
-        .do(logObs('Query ' + queryUrl));
+      return http.post(cred.url + '/' + queryUrl, query.params, { headers }).pipe(
+        tap(logObs('Query ' + queryUrl)));
     }
   };
 };
@@ -166,11 +167,12 @@ export class RedmineService {
       throw new Error('Redmine not configured');
     }
     return {
-      getIssues: (params: IssueParams) => runQuery.get<any>(makeQuery('issues', params)).do(logObs('***getIssues')).map(v => v.issues),
+      getIssues: (params: IssueParams) => runQuery.get<any>(makeQuery('issues', params)).pipe(
+        tap(logObs('***getIssues')), map(v => v.issues)),
 //      test: (cmd: string, arg: any) => runQuery<any>(cmd, arg).map(v => JSON.stringify(v)).catch(e => Observable.of(JSON.stringify(e))),
 //      search: (params: SearchParams) => runQuery<any>('search', params).map(v => v.results)
-      getEnumeration: (enumeration: string) => runQuery.get<any>(makeQuery('enumerations/' + enumeration))
-                        .map(v => v[enumeration] as IdAndName[]), // Observable<IdAndName[]>,
+      getEnumeration: (enumeration: string) => runQuery.get<any>(makeQuery('enumerations/' + enumeration)).pipe(
+                        map(v => v[enumeration] as IdAndName[])), // Observable<IdAndName[]>,
       run: (query: Query) => runQuery.get<any>(query),
       createTimeEntry: (timeEntry: TimeEntry) => runQuery.post(makeQuery('time_entries', { 'time_entry': timeEntry }))
     };

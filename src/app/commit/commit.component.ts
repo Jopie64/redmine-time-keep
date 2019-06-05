@@ -5,6 +5,7 @@ import { Observable ,  Subject } from 'rxjs';
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, Validators } from '@angular/forms';
+import { startWith, take, map, switchMap, withLatestFrom } from 'rxjs/operators';
 
 @Component({
   selector: 'app-commit',
@@ -20,8 +21,9 @@ export class CommitComponent {
   public get description() { return this.issue && this.issue.description ? this.issue.description : ''; }
 
   public workPerc$ = new Subject<number>();
-  public commitDuration$ = this.worktime.runningTime$.withLatestFrom(this.workPerc$.startWith(1))
-    .map(([dur, perc]) => Math.floor(dur * perc));
+  public commitDuration$ = this.worktime.runningTime$.pipe(
+    withLatestFrom(this.workPerc$.pipe(startWith(1))),
+    map(([dur, perc]) => Math.floor(dur * perc)));
   public activities: IdAndName[];
 
   public finalDuration = 0;
@@ -38,18 +40,18 @@ export class CommitComponent {
       public worktime: WorktimeService,
       redmineService: RedmineService) {
     this.redmine = redmineService.getApi();
-    this.redmine.getEnumeration('time_entry_activities')
-      .take(1).subscribe(v => {
+    this.redmine.getEnumeration('time_entry_activities').pipe(
+      take(1)).subscribe(v => {
         this.activities = v;
         v.forEach(a => a.is_default ? this.commit.patchValue({ activity: '' + a.id }) : 0);
       });
-    this.route.paramMap
-      .map(v => parseInt(v.get('issue'), 10))
-      .switchMap(id => this.redmine.getIssues({ issue_id: id }))
-      .map(v => v[0])
-      .take(1)
+    this.route.paramMap.pipe(
+      map(v => parseInt(v.get('issue'), 10)),
+      switchMap(id => this.redmine.getIssues({ issue_id: id })),
+      map(v => v[0]),
+      take(1))
       .subscribe(i => this.issue = i);
-    this.commitDuration$.take(1).subscribe(v => this.onDurationChange(v));
+    this.commitDuration$.pipe(take(1)).subscribe(v => this.onDurationChange(v));
   }
 
   onDurationChange(newVal) {
@@ -77,8 +79,8 @@ export class CommitComponent {
       comments: commitForm.comment as string
     };
     console.log('Creating time-entry', activity);
-    this.redmine.createTimeEntry(activity)
-      .take(1)
+    this.redmine.createTimeEntry(activity).pipe(
+      take(1))
       .subscribe(_ => {
         this.worktime.subtract(finalDuration);
         this.router.navigate(['/']);

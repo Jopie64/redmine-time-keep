@@ -1,6 +1,7 @@
 import { FormBuilder } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
 import { Component, OnInit, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { map } from 'rxjs/operators';
 
 const toDuration = tm =>
         parseInt(tm.hours, 10) * 3600
@@ -41,8 +42,8 @@ export class DurationComponent implements OnInit, OnDestroy {
           seconds: dur % 60
         });
       }));
-    this.conns.add(this.durationForm.valueChanges
-      .map(toDuration)
+    this.conns.add(this.durationForm.valueChanges.pipe(
+      map(toDuration))
       .subscribe(this.change));
   }
 

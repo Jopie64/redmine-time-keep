@@ -24,7 +24,8 @@
               "node_modules/normalize.css/normalize.css",
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [],
+            "preserveSymlinks": true
           },
           "configurations": {
             "production": {

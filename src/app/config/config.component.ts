@@ -1,7 +1,8 @@
 import { RedmineService } from './../redmine.service';
 import { Component } from '@angular/core';
-import { FormBuilder, Validators, FormControl, FormGroup } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { FormBuilder, Validators } from '@angular/forms';
+import { Observable, of, concat } from 'rxjs';
+import { switchMap, map, shareReplay, mapTo, tap, catchError } from 'rxjs/operators';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 
@@ -20,18 +21,17 @@ export class ConfigComponent {
     passwordConfirm: ['', [Validators.required, _ => this.passEqual()]]
   });
 
-  httpStatus$ = this.credentials.statusChanges
-    .switchMap((v): Observable<HttpStatus> => v !== 'VALID'
-      ? Observable.of(0 as HttpStatus)
-      : Observable.concat(
-          Observable.of(1 as HttpStatus),
-          this.testRedmineLogin(this.credentials.value).map(t => t === '' ? 2  as HttpStatus : t as HttpStatus)))
+  httpStatus$ = this.credentials.statusChanges.pipe(
+    switchMap((v): Observable<HttpStatus> => v !== 'VALID'
+      ? of(0)
+      : concat(
+          of(1 as HttpStatus),
+          this.testRedmineLogin(this.credentials.value).pipe(map(t => t === '' ? 2  as HttpStatus : t as HttpStatus)))),
+    shareReplay(1));
 
-    .shareReplay(1);
-
-  showSpinner$ = this.httpStatus$.map(v => v === 1);
-  showContinue$ = this.httpStatus$.map(v => v === 2);
-  showError$ = this.httpStatus$.map(v => typeof v === 'string' ? v : null);
+  showSpinner$ = this.httpStatus$.pipe(map(v => v === 1));
+  showContinue$ = this.httpStatus$.pipe(map(v => v === 2));
+  showError$ = this.httpStatus$.pipe(map(v => typeof v === 'string' ? v : null));
 
   passEqual() {
     if (!this || !this.credentials) {
@@ -48,12 +48,13 @@ export class ConfigComponent {
     const headers = new HttpHeaders()
       .set('Content-Type', 'application/json')
       .set('authorization', auth);
-    return this.http.get(cred.url + '/issues.json?limit=1', { headers })
-      .mapTo('')
-      .do(null, v => console.log('Http Error', v))
-      .catch(e => e instanceof HttpErrorResponse
-        ? Observable.of(e.message)
-        : Observable.of('' + e));
+    return this.http.get(cred.url + '/issues.json?limit=1', { headers }).pipe(
+      mapTo(''),
+      tap(null, v => console.log('Http Error', v)),
+      catchError(e => e instanceof HttpErrorResponse
+        ? of(e.message)
+        : of('' + e)
+      ));
   }
 
   constructor(private fb: FormBuilder, private http: HttpClient, private router: Router, private redmine: RedmineService) {
