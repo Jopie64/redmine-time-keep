@@ -10,7 +10,8 @@ import { MarkdownModule } from 'ngx-markdown';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatFormFieldModule, MatSelectModule, MatInputModule, MatSidenavModule,
   MatToolbarModule, MatProgressSpinnerModule, MatIconModule,
-  MatButtonModule, MatListModule, MatExpansionModule, MatSliderModule, MatRadioModule } from '@angular/material';
+  MatButtonModule, MatListModule, MatExpansionModule, MatSliderModule, MatRadioModule,
+  MatCardModule } from '@angular/material';
 
 import { AppComponent } from './app.component';
 import { ConfigComponent } from './config/config.component';
@@ -41,7 +42,8 @@ const routes: Routes = [
     MatToolbarModule, MatFormFieldModule, MatSelectModule,
     MatProgressSpinnerModule, MatIconModule, MatButtonModule,
     MatSidenavModule, MatListModule, MatExpansionModule,
-    MatInputModule, MatSliderModule, MatRadioModule
+    MatInputModule, MatSliderModule, MatRadioModule,
+    MatCardModule
   ],
   providers: [RedmineService, WorktimeService],
   bootstrap: [AppComponent]
