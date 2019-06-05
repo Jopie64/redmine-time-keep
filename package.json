@@ -23,8 +23,8 @@
     "@angular/platform-browser-dynamic": "8.0.0",
     "@angular/platform-server": "8.0.0",
     "@angular/router": "8.0.0",
-    "angular2-markdown": "^2.2.2",
     "core-js": "^2.4.1",
+    "ngx-markdown": "^8.0.2",
     "normalize.css": "^7.0.0",
     "rxjs": "^6.5.2",
     "zone.js": "^0.9.1"
@@ -36,7 +36,6 @@
     "@types/jasmine": "^2.6.0",
     "@types/jasminewd2": "~2.0.2",
     "@types/node": "~6.0.60",
-    "codelyzer": "~3.0.1",
     "jasmine-core": "~2.6.2",
     "jasmine-spec-reporter": "~4.1.0",
     "karma": "~1.7.0",
